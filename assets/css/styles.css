@@ -1,0 +1,219 @@
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #EEF2E6;
+  font-size: 1rem;
+  height: 100vh;
+}
+main .message {
+  position: fixed;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.8em;
+  padding: 0.8em 2em;
+  border-radius: 5px;
+  scale: 0;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+main .message.active {
+  scale: 1;
+  opacity: 1;
+}
+main .message.danger {
+  color: #d9534f;
+  border: 1px solid #d9534f;
+  background-color: #f2dede;
+}
+main .message.success {
+  color: #5cb85c;
+  border: 1px solid #5cb85c;
+  background-color: #dff0d8;
+}
+main .message .message__text {
+  font-size: 1.2em;
+  font-weight: 700;
+}
+main .content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  background-color: #D6CDA4;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(75, 73, 73, 0.1490196078);
+  max-height: 80%;
+  overflow-y: auto;
+}
+main .content::-webkit-scrollbar {
+  width: 7px;
+}
+main .content::-webkit-scrollbar-track {
+  background: #EEF2E6;
+}
+main .content::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #1C6758;
+}
+main .content h1 {
+  font-size: 2em;
+  padding: 1em;
+  text-align: center;
+}
+main .content form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  width: 90%;
+  z-index: 2;
+  background-color: #D6CDA4;
+}
+main .content form input {
+  width: 100%;
+  padding: 0.7em 2em;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  outline: none;
+}
+main .content form button {
+  padding: 0.7em;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  background-color: #1C6758;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+}
+main .content form select {
+  margin-left: 1em;
+  padding: 0.7em 0.4em;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  background-color: #3D8361;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+}
+main .content .tasks_container {
+  width: 100%;
+  padding: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 2em;
+}
+main .content .tasks_container .tasks {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 1em;
+}
+main .content .tasks_container .tasks .task {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8em 2em;
+  background-color: #EEF2E6;
+  border-radius: 10px;
+  margin-bottom: 1em;
+  border: 1.5px solid transparent;
+}
+main .content .tasks_container .tasks .task.done {
+  border-color: #5cb85c;
+}
+main .content .tasks_container .tasks .task.done .text {
+  text-decoration: line-through;
+}
+main .content .tasks_container .tasks .task.not-done {
+  border-color: #d9534f;
+}
+main .content .tasks_container .tasks .task .text {
+  font-size: 1.2em;
+  font-weight: 500;
+}
+main .content .tasks_container .tasks .task textarea {
+  position: absolute;
+  top: calc(50% - 1.65em);
+  left: 2em;
+  width: 69%;
+  border: 1px solid #1C6758;
+  border-radius: 5px;
+  padding: 0.5em;
+  font-size: 0.8em;
+  outline: none;
+  background-color: #EEF2E6;
+  color: #000;
+  font-weight: 500;
+  display: none;
+}
+main .content .tasks_container .tasks .task textarea.active {
+  display: block;
+}
+main .content .tasks_container .tasks .task .right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+main .content .tasks_container .tasks .task .right .actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+main .content .tasks_container .tasks .task .right .actions button {
+  padding: 0.5em;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  background-color: #1C6758;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+  margin: 0.2em;
+}
+main .content .tasks_container .tasks .task .right .status {
+  padding: 0.35em;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  background-color: #d9534f;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+  margin: 0.2em;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+main .content .tasks_container .tasks .task .right .status.done {
+  background-color: #5cb85c;
+}/*# sourceMappingURL=styles.css.map */
