@@ -2,11 +2,16 @@ $greenPrimary: #1C6758;
 $greenSecondary: #3D8361;
 $beigePrimary: #D6CDA4;
 $beigeSecondary: #EEF2E6;
+
 $fontColor: #fff;
+
 $success: #5cb85c;
-$danger: #d9534f;
 $bgSuccess: #dff0d8;
+$danger: #d9534f;
 $bgDanger: #f2dede;
+
+$loaderColor: #fff;
+$loaderBg: #000;
 
 *,
 *:before,
@@ -66,6 +71,7 @@ main {
     }
 
     .content {
+        position: relative;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -96,6 +102,44 @@ main {
             font-size: 2em;
             padding: 1em;
             text-align: center;
+        }
+
+        .loader {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            z-index: -1;
+            transition: all .3s ease-in-out;
+
+            &.active {
+                opacity: 1;
+                z-index: 4;
+            }
+
+            .spinner {
+                width: 3em;
+                height: 3em;
+                border: 3px solid $loaderColor;
+                border-top-color: $loaderBg;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
         }
 
         form {
@@ -132,13 +176,27 @@ main {
             select {
                 margin-left: 1em;
                 padding: .7em .4em;
-                border: none;
+                background-color: $greenPrimary;
                 border-radius: 5px;
                 font-size: 1em;
-                background-color: $greenSecondary;
-                color: $fontColor;
                 cursor: pointer;
+                border: none;
                 outline: none;
+
+                option {
+                    &[value="all"] {
+                        color: $fontColor;
+                    }
+
+                    &[value="completed"] {
+                        color: $success;
+                    }
+
+                    &[value="uncompleted"] {
+                        color: $danger;
+                    }
+                }
+
             }
         }
 
@@ -176,7 +234,7 @@ main {
 
                         .text {
                             text-decoration: line-through;
-                        }   
+                        }
                     }
 
                     &.not-done {
@@ -188,24 +246,59 @@ main {
                         font-weight: 500;
                     }
 
-                    textarea {
+                    .edit_content {
                         position: absolute;
-                        top: calc(50% - 1.65em);
-                        left: 2em;
-
-                        width: 69%;
-                        border: 1px solid $greenPrimary;
-                        border-radius: 5px;
-                        padding: .5em;
-                        font-size: .8em;
-                        outline: none;
                         background-color: $beigeSecondary;
-                        color: #000;
-                        font-weight: 500;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        width: 90%;
                         display: none;
+                        justify-content: center;
+                        gap: .5em;
 
                         &.active {
+                            display: flex;
+                        }
+
+                        textarea {
+                            flex: 2;
+                            border: 1px solid $greenPrimary;
+                            border-radius: 5px;
+                            padding: .5em;
+                            font-size: .8em;
+                            outline: none;
+                            background-color: $beigeSecondary;
+                            color: #000;
+                            font-weight: 500;
                             display: block;
+                        }
+
+                        .buttons {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            gap: .5em;
+
+                            button {
+                                border-radius: 5px;
+                                padding: 1.1em;
+                                font-size: .8em;
+                                outline: none;
+                                border: none;
+                                color: $fontColor;
+                                font-weight: 500;
+                                cursor: pointer;
+                                display: block;
+
+                                &.save {
+                                    background-color: $success;
+                                }
+
+                                &.cancel {
+                                    background-color: $danger;
+                                }
+                            }
                         }
                     }
 

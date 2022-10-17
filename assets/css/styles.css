@@ -51,6 +51,7 @@ main .message .message__text {
   font-weight: 700;
 }
 main .content {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -78,6 +79,48 @@ main .content h1 {
   font-size: 2em;
   padding: 1em;
   text-align: center;
+}
+main .content .loader {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: -1;
+  transition: all 0.3s ease-in-out;
+}
+main .content .loader.active {
+  opacity: 1;
+  z-index: 4;
+}
+main .content .loader .spinner {
+  width: 3em;
+  height: 3em;
+  border: 3px solid #fff;
+  border-top-color: #000;
+  border-radius: 50%;
+  -webkit-animation: spin 1s linear infinite;
+          animation: spin 1s linear infinite;
+}
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 main .content form {
   display: flex;
@@ -112,13 +155,21 @@ main .content form button {
 main .content form select {
   margin-left: 1em;
   padding: 0.7em 0.4em;
-  border: none;
+  background-color: #1C6758;
   border-radius: 5px;
   font-size: 1em;
-  background-color: #3D8361;
-  color: #fff;
   cursor: pointer;
+  border: none;
   outline: none;
+}
+main .content form select option[value=all] {
+  color: #fff;
+}
+main .content form select option[value=completed] {
+  color: #5cb85c;
+}
+main .content form select option[value=uncompleted] {
+  color: #d9534f;
 }
 main .content .tasks_container {
   width: 100%;
@@ -162,11 +213,22 @@ main .content .tasks_container .tasks .task .text {
   font-size: 1.2em;
   font-weight: 500;
 }
-main .content .tasks_container .tasks .task textarea {
+main .content .tasks_container .tasks .task .edit_content {
   position: absolute;
-  top: calc(50% - 1.65em);
-  left: 2em;
-  width: 69%;
+  background-color: #EEF2E6;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  display: none;
+  justify-content: center;
+  gap: 0.5em;
+}
+main .content .tasks_container .tasks .task .edit_content.active {
+  display: flex;
+}
+main .content .tasks_container .tasks .task .edit_content textarea {
+  flex: 2;
   border: 1px solid #1C6758;
   border-radius: 5px;
   padding: 0.5em;
@@ -175,10 +237,30 @@ main .content .tasks_container .tasks .task textarea {
   background-color: #EEF2E6;
   color: #000;
   font-weight: 500;
-  display: none;
-}
-main .content .tasks_container .tasks .task textarea.active {
   display: block;
+}
+main .content .tasks_container .tasks .task .edit_content .buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5em;
+}
+main .content .tasks_container .tasks .task .edit_content .buttons button {
+  border-radius: 5px;
+  padding: 1.1em;
+  font-size: 0.8em;
+  outline: none;
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  display: block;
+}
+main .content .tasks_container .tasks .task .edit_content .buttons button.save {
+  background-color: #5cb85c;
+}
+main .content .tasks_container .tasks .task .edit_content .buttons button.cancel {
+  background-color: #d9534f;
 }
 main .content .tasks_container .tasks .task .right {
   display: flex;

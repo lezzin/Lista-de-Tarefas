@@ -1,25 +1,56 @@
 const form = document.querySelector('#form'),
-    input = form.querySelector('input'),
-    btn = form.querySelector('button'),
+    inputNewTask = form.querySelector('input'),
     tasksList = document.querySelector('#tasks'),
     messageContainer = document.querySelector('.message'),
     messageText = messageContainer.querySelector('p'),
-    select = document.querySelector('select');
+    select = document.querySelector('select'),
+    loader = document.querySelector('.loader');
 
 
 // functions
-function displayMessage(message, type) {
+function displayMessage(message, status) {
     messageText.textContent = message;
-    messageContainer.classList.add(type);
     messageContainer.classList.add("active");
+    messageContainer.classList.add(status);
+
     setTimeout(function () {
         messageContainer.classList.remove("active");
-        messageContainer.classList.remove(type);
+        messageContainer.classList.remove(status);
     }, 2000);
 }
 
+function enableLoader() {
+    loader.classList.add('active');
+}
+
+function disableLoader() {
+    setTimeout(function () {
+        loader.classList.remove('active');
+    }, 500);
+}
+
+function openEditMode(element) {
+    let div = element.parentElement.parentElement.previousElementSibling,
+        paragraph = div.previousElementSibling,
+        textarea = div.querySelector('textarea');
+
+    div.classList.add('active');
+    textarea.value = paragraph.textContent;
+    textarea.focus();
+}
+
+function closeEditMode(element) {
+    let div = element.parentElement.parentElement,
+        textarea = div.querySelector('textarea'),
+        paragraph = div.previousElementSibling,
+        currentDescription = paragraph.textContent;
+
+    div.classList.remove('active');
+    textarea.value = currentDescription;
+}
+
 function addTask() {
-    let task = input.value;
+    let task = inputNewTask.value;
 
     $.ajax({
         url: 'actions/insert.php',
@@ -41,74 +72,27 @@ function addTask() {
     });
 }
 
-function getTasks(filter = "all") {
+function filterTasks() {
+    let filter = select.value;
 
-    filter = localStorage.getItem('filter') ? localStorage.getItem('filter') : filter;
-    select.value = filter;
-
-    $.ajax({
-        url: 'actions/select.php',
-        type: 'POST',
-        data: { filter: filter },
-        success: function (response) {
-            tasksList.innerHTML = '';
-            response = JSON.parse(response);
-            if (response.error) {
-                let li = document.createElement('li');
-                li.classList.add('task');
-                li.innerHTML = `<p class="text">${response.error}</p>`;
-                tasksList.appendChild(li);
-                return;
-            }
-                
-            console.log(response);
-
-            response.forEach(task => {
-                let li = document.createElement('li'),
-                    doneClass = statusTitle = "";
-
-                doneClass = task.status == 2 ? 'done' : '';
-                task.status == 2 ? li.classList.add('done') : li.classList.add('not-done');
-                task.status == 2 ? statusTitle = 'Marcar como não concluído' : statusTitle = 'Marcar como concluído';
-
-                li.classList.add('task');
-                li.innerHTML = `
-                    <p class="text">${task.description}</p>
-                    <textarea onblur="editTask(this, ${task.idTarefa})" value="${task.description}"></textarea>
-                    <div class="right">
-                        <div class="actions">
-                            <button onclick="deleteTask(${task.idTarefa})" title="Deletar tarefa"><i class="fas fa-trash-alt"></i></button>
-                            <button onclick="openTextarea(this)" title="Editar tarefa"><i class="fas fa-edit"></i></button>
-                        </div>
-                        <div class="status ${doneClass}" title="${statusTitle}">
-                            <i class="fas fa-check" onclick="updateStatus(${task.idTarefa}, this)"></i>
-                            <input type="hidden" value="${task.status}">
-                            <input type="hidden" value="${task.idTarefa}">
-                        </div>
-                    </div>`;
-
-                tasksList.appendChild(li);
-            });
-        }
-    });
+    localStorage.setItem('filter', filter);
+    getTasks(filter);
 }
 
 function deleteTask(id) {
-    if (confirm('Tem certeza que deseja excluir?')) {
-        $.ajax({
-            url: 'actions/delete.php',
-            type: 'POST',
-            data: { id: id },
-            success: function (response) {
-                response = JSON.parse(response);
+    $.ajax({
+        url: 'actions/delete.php',
+        type: 'POST',
+        data: { id: id },
+        success: function (response) {
+            response = JSON.parse(response);
 
-                if (response.error) return displayMessage(response.error, 'danger');
+            if (response.error) return displayMessage(response.error, 'danger');
 
-                displayMessage(response.success, 'success');
-                getTasks();
-            }
-        });
-    }
+            displayMessage(response.success, 'success');
+            getTasks();
+        }
+    });
 }
 
 function updateStatus(id, element, status = 2) {
@@ -131,18 +115,12 @@ function updateStatus(id, element, status = 2) {
     });
 }
 
-function openTextarea(element) {
-    let textarea = element.parentElement.parentElement.previousElementSibling,
-        p = textarea.previousElementSibling;
-    textarea.classList.toggle('active');
-    textarea.focus();
-
-    textarea.value = p.textContent;
-}
-
 function editTask(element, id) {
-    let newDescription = element.value,
-        currentDescription = element.previousElementSibling.textContent;
+    let div = element.parentElement.parentElement,
+        textarea = div.querySelector('textarea'),
+        paragraph = div.previousElementSibling,
+        newDescription = textarea.value,
+        currentDescription = paragraph.textContent;
 
     newDescription = newDescription == "" ? currentDescription : newDescription;
 
@@ -164,12 +142,68 @@ function editTask(element, id) {
     });
 }
 
-function filterTasks() {
-    let filter = select.value;
-    
-    localStorage.setItem('filter', filter);
-    getTasks(filter);
+function createListItem(task) {
+    let li = document.createElement('li'),
+        doneClass = statusTitle = "";
+
+    doneClass = task.status == 2 ? 'done' : '';
+
+    li.classList.add('task');
+    task.status == 2 ? li.classList.add('done') : li.classList.add('not-done');
+    task.status == 2 ? statusTitle = 'Marcar como não concluído' : statusTitle = 'Marcar como concluído';
+
+    li.innerHTML = `
+        <p class="text">${task.description}</p>
+        <div class="edit_content">
+            <textarea value="${task.description}"></textarea>
+            <div class="buttons">
+                <button class="save" onclick="editTask(this, ${task.idTarefa})"> <i class="fas fa-check"></i> </button>
+                <button class="cancel" onclick="closeEditMode(this)"> <i class="fas fa-times"></i> </button>
+            </div>
+        </div>
+        <div class="right">
+            <div class="actions">
+                <button onclick="deleteTask(${task.idTarefa})" title="Deletar tarefa"><i class="fas fa-trash-alt"></i></button>
+                <button onclick="openEditMode(this)" title="Editar tarefa"><i class="fas fa-edit"></i></button>
+            </div>
+            <div class="status ${doneClass}" title="${statusTitle}">
+                <i class="fas fa-check" onclick="updateStatus(${task.idTarefa}, this)"></i>
+                <input type="hidden" value="${task.status}">
+                <input type="hidden" value="${task.idTarefa}">
+            </div>
+        </div>`;
+
+    tasksList.appendChild(li);
 }
+
+function getTasks(filter = "all") {
+    filter = localStorage.getItem('filter') ? localStorage.getItem('filter') : filter;
+    select.value = filter;
+
+    enableLoader();
+
+    $.ajax({
+        url: 'actions/select.php',
+        type: 'POST',
+        data: { filter: filter },
+        success: function (response) {
+            tasksList.innerHTML = '';
+            response = JSON.parse(response);
+
+            if (response.error) {
+                let liHTML = `<li class="task"><p class="text">${response.error}</p></li>`
+                tasksList.innerHTML = liHTML;
+                disableLoader();
+                return;
+            }
+
+            disableLoader(); 
+            response.forEach(task => { createListItem(task) });
+        }
+    });
+}
+
+getTasks();
 
 form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -177,5 +211,3 @@ form.addEventListener('submit', function (e) {
 });
 
 select.addEventListener('change', filterTasks);
-
-getTasks();
