@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+$greenPrimary: #1C6758;
+$greenSecondary: #3D8361;
+$beigePrimary: #D6CDA4;
+$beigeSecondary: #EEF2E6;
+
+$fontColor: #fff;
+$fontColorSecondary: #252525;
+
+$success: #5cb85c;
+$bgSuccess: #dff0d8;
+$danger: #d9534f;
+$bgDanger: #f2dede;
+
+$loaderColor: #fff;
+$loaderBg: #252525;
+
+@mixin flexbox($direction, $justify, $align) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify;
+    align-items: $align;
+}

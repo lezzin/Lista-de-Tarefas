@@ -1,0 +1,392 @@
+@import './variables';
+
+*,
+*:before,
+*:after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.getOutBtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3rem;
+    aspect-ratio: 1/1;
+    padding: 1rem;
+    margin: 1rem;
+    background-color: $danger;
+    color: $fontColor;
+    outline: none;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        scale: 1.1;
+    }
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $beigeSecondary;
+    font-size: 1rem;
+    height: 100vh;
+
+    .message {
+        position: fixed;
+        top: 0;
+        z-index: 3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: .8rem;
+        padding: .8rem 2rem;
+        border-radius: 5px;
+        scale: 0;
+        opacity: 0;
+        transition: all .3s ease-in-out;
+
+        &.active {
+            scale: 1;
+            opacity: 1;
+        }
+
+        &.danger {
+            color: $danger;
+            border: 1px solid $danger;
+            background-color: $bgDanger;
+        }
+
+        &.success {
+            color: $success;
+            border: 1px solid $success;
+            background-color: $bgSuccess;
+        }
+
+        .message__text {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+    }
+
+    .content {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        width: 96%;
+        max-width: 600px;
+        background-color: $beigePrimary;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 20px #4b494926;
+        max-height: 80%;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: $beigeSecondary;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background: $greenPrimary;
+        }
+
+        h1 {
+            font-size: 2rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .loader {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            z-index: -1;
+            transition: all .3s ease-in-out;
+
+            &.active {
+                opacity: 1;
+                z-index: 4;
+            }
+
+            .spinner {
+                width: 3rem;
+                height: 3rem;
+                border: 3px solid $loaderColor;
+                border-top-color: $loaderBg;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            width: 90%;
+            z-index: 2;
+            background-color: $beigePrimary;
+
+            @media (max-width: 600px) {
+                flex-direction: column;
+
+                * {
+                    width: 100%;
+
+                    &:not(:last-child) {
+                        margin-bottom: .5rem;
+                    }
+                }
+
+                select#filter {
+                    margin-left: 0;
+                }
+            }
+
+            input {
+                width: 100%;
+                padding: .7rem 2rem;
+                border: none;
+                border-radius: 5px;
+                font-size: 1rem;
+                outline: none;
+            }
+
+            button {
+                padding: .7rem;
+                border: none;
+                border-radius: 5px;
+                font-size: 1rem;
+                background-color: $greenPrimary;
+                color: $fontColor;
+                cursor: pointer;
+                outline: none;
+            }
+
+            select {
+                margin-left: 1rem;
+                padding: .7rem .4rem;
+                background-color: $greenPrimary;
+                border-radius: 5px;
+                font-size: 1rem;
+                cursor: pointer;
+                border: none;
+                outline: none;
+
+                option {
+                    &[value="all"] {
+                        color: $fontColor;
+                    }
+
+                    &[value="completed"] {
+                        color: $success;
+                    }
+
+                    &[value="uncompleted"] {
+                        color: $danger;
+                    }
+                }
+
+            }
+        }
+
+        .tasks_container {
+            width: 100%;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 2rem;
+
+            .tasks {
+                width: 80%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                margin-bottom: 1rem;
+
+                @media (max-width: 600px) {
+                    width: 100%;
+                }
+
+                .task {
+                    position: relative;
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: .8rem 2rem;
+                    background-color: $beigeSecondary;
+                    border-radius: 10px;
+                    margin-bottom: 1rem;
+                    border: 1.5px solid transparent;
+
+                    @media (max-width: 600px) {
+                        padding: .8rem 1rem;
+                    }
+
+                    &.done {
+                        border-color: $success;
+
+                        .text {
+                            text-decoration: line-through;
+                        }
+                    }
+
+                    &.not-done {
+                        border-color: $danger;
+                    }
+
+                    .text {
+                        font-size: 1.2rem;
+                        font-weight: 500;
+
+                        @media (max-width: 600px) {
+                            display: block;
+                            max-width: 80%;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            font-size: 1rem;
+                        }
+                    }
+
+                    .edit_content {
+                        position: absolute;
+                        background-color: $beigeSecondary;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        width: 90%;
+                        display: none;
+                        justify-content: center;
+                        gap: .5rem;
+
+                        &.active {
+                            display: flex;
+                        }
+
+                        textarea {
+                            flex: 2;
+                            border: 1px solid $greenPrimary;
+                            border-radius: 5px;
+                            padding: .5rem;
+                            font-size: .8rem;
+                            outline: none;
+                            background-color: $beigeSecondary;
+                            color: #000;
+                            font-weight: 500;
+                            display: block;
+                        }
+
+                        .buttons {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            gap: .5rem;
+
+                            button {
+                                border-radius: 5px;
+                                padding: 1.1rem;
+                                font-size: .8rem;
+                                outline: none;
+                                border: none;
+                                color: $fontColor;
+                                font-weight: 500;
+                                cursor: pointer;
+                                display: block;
+
+                                &.save {
+                                    background-color: $success;
+                                }
+
+                                &.cancel {
+                                    background-color: $danger;
+                                }
+                            }
+                        }
+                    }
+
+                    .right {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        .actions {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+
+                            button {
+                                padding: .5rem;
+                                border: none;
+                                border-radius: 5px;
+                                font-size: 1rem;
+                                background-color: $greenPrimary;
+                                color: $fontColor;
+                                cursor: pointer;
+                                outline: none;
+                                margin: .2rem;
+                            }
+
+                        }
+
+                        .status {
+                            padding: .35rem;
+                            border: none;
+                            border-radius: 5px;
+                            font-size: 1rem;
+                            background-color: $danger;
+                            color: $fontColor;
+                            cursor: pointer;
+                            outline: none;
+                            margin: .2rem;
+                            font-size: 1.2rem;
+                            cursor: pointer;
+
+                            &.done {
+                                background-color: $success;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
